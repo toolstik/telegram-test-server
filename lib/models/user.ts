@@ -1,7 +1,8 @@
 import casual = require('casual');
-import { Chat as TelegramChat, User as TelegramUser } from 'typegram';
+import { Chat as TelegramChat, Message, User as TelegramUser } from 'typegram';
 
 import { TelegramServer } from '../server';
+import { Bot } from './bot';
 
 export class User {
   info: TelegramUser;
@@ -18,13 +19,13 @@ export class User {
     };
   }
 
-  startBot(bot, startParams) {
+  startBot(bot: Bot, startParams?) {
     const chat = this.createChat();
     chat.invite(bot);
     chat.postMessage(this, {
       text: `/start ${startParams}`,
       entities: [{ offset: 0, length: 6, type: 'bot_command' }],
-    });
+    } as Message);
     return chat;
   }
 

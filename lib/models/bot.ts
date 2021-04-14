@@ -7,17 +7,15 @@ import { TelegramServer } from '../server';
 const wait = (ms = 100) => new Promise((resolve, reject) => setTimeout(resolve, ms));
 
 export class Bot {
-  private queue = [];
+  private queue: Update[] = [];
   private lastUpdateId = 0;
 
   botMethods: any;
 
-  constructor(
-    private server: TelegramServer,
-    public token: string,
-    public info: Partial<User> = {},
-  ) {
-    info = {
+  readonly info: User;
+
+  constructor(private server: TelegramServer, public token: string, info: Partial<User> = {}) {
+    this.info = {
       id: casual.integer(1000000, 10000000),
       is_bot: true,
       username: `${casual.username}_bot`,
@@ -29,7 +27,10 @@ export class Bot {
 
     this.token = token || `${this.info.id}:${casual.uuid}`;
 
-    const sendRawMessage = payload => this.resolveChat(payload.chat_id).postMessage(this, payload);
+    const sendRawMessage = payload => {
+      const chat = this.resolveChat(payload.chat_id);
+      chat.postMessage(this, payload);
+    };
 
     this.botMethods = {
       getme: () => this.info,
@@ -43,7 +44,7 @@ export class Bot {
         return updates;
       },
       answercallbackquery: payload => {
-        const chat = this.server.findChatByCbQuery(payload.callback_query_id);
+        const chat = this.server.findChatByCbQuery(String(payload.callback_query_id));
         assert(chat && chat.checkAccess(this.info.id), 400, 'Bad Request: chat not found');
         chat.postCbQueryAnswer(this, payload);
         return true;
@@ -76,12 +77,11 @@ export class Bot {
 
   queueUpdate(update: Update) {
     this.lastUpdateId++;
-    this.queue.push({ update_id: this.lastUpdateId, ...update });
+    update = { update_id: this.lastUpdateId, ...update };
+    this.queue.push(update);
   }
 
-  handleBotCall(method, payload) {
+  handleBotCall(method: string, payload) {
     return this.botMethods[method] && this.botMethods[method](payload);
   }
 }
-
-module.exports = Bot;

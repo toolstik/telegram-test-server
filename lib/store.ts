@@ -4,7 +4,7 @@ import { User } from './models/user';
 
 export class Store {
   private users = [];
-  private bots = [];
+  private bots: Bot[] = [];
   private channels = [];
   private chats: Chat[] = [];
 
@@ -33,9 +33,11 @@ export class Store {
     return this.chats.find(chat => chat.info.id === chatId);
   }
 
-  findChatByCbQuery(cbQueryId: number) {
+  findChatByCbQuery(cbQueryId: string) {
     return this.chats.find(chat =>
-      chat.history.some(update => update.callback_query && update.callback_query.id === cbQueryId),
+      chat.history.some(
+        update => 'callback_query' in update && update.callback_query.id === cbQueryId,
+      ),
     );
   }
 }

@@ -1,12 +1,12 @@
 import casual = require('casual');
-import { Chat as TelegramChat, Message, Update, User as TelegramUser } from 'typegram';
+import { CallbackQuery, Chat as TelegramChat, Message, Update } from 'typegram';
 
 import { Bot } from './bot';
 import { User } from './user';
 
 export class Chat {
-  participants = [];
-  history = [];
+  participants: (User | Bot)[] = [];
+  history: Update[] = [];
 
   info: TelegramChat;
 
@@ -18,7 +18,7 @@ export class Chat {
     } as TelegramChat;
   }
 
-  invite(user: User) {
+  invite(user: User | Bot) {
     this.participants.push(user);
   }
 
@@ -33,19 +33,22 @@ export class Chat {
   }
 
   notifyBots(update: Update) {
-    this.participants.filter(({ info }) => info.is_bot).forEach(bot => bot.queueUpdate(update));
+    this.participants
+      .filter(({ info }) => info.is_bot)
+      .forEach((bot: Bot) => bot.queueUpdate(update));
   }
 
-  postMessage(author: User | Bot, message: Partial<Message> & { text: string }) {
-    message = {
-      message_id: this.history.filter(u => u.message).length + 1,
+  postMessage(author: User | Bot, message: Message) {
+    const msg: Message = {
+      message_id: this.history.filter(u => 'message' in u && u.message).length + 1,
       chat: this.info,
-      from: author.info as TelegramUser,
+      from: author.info,
       date: 0,
       ...message,
     };
+
     const update = {
-      message,
+      message: msg,
     } as Update;
 
     this.history.push(update);
@@ -53,31 +56,30 @@ export class Chat {
       this.notifyBots(update);
     }
 
-    return message;
+    return msg;
   }
 
-  postCbQuery(user, message, data) {
+  postCbQuery(user: User, message: Message, data: string) {
     const callback_query = {
-      id: casual.integer(1000000),
+      id: String(casual.integer(1000000)),
       from: user.info,
       message: message,
+      chat_instance: undefined,
       data,
-    };
+    } as CallbackQuery;
 
-    const update = ({
+    const update = {
       callback_query,
-    } as any) as Update;
+    } as Update;
 
     this.history.push(update);
     this.notifyBots(update);
     return callback_query;
   }
 
-  postCbQueryAnswer(user, cbQuery) {
-    const update = { callback_query_answer: cbQuery };
+  postCbQueryAnswer(user: User | Bot, cbQuery: CallbackQuery) {
+    const update = { callback_query: cbQuery } as Update;
     this.history.push(update);
     return cbQuery;
   }
 }
-
-module.exports = Chat;
