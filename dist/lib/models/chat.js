@@ -32,7 +32,7 @@ class Chat {
         if (!author.info.is_bot) {
             this.notifyBots(update);
         }
-        return msg;
+        return update;
     }
     postCbQuery(user, message, data) {
         const callback_query = {
@@ -47,12 +47,12 @@ class Chat {
         };
         this.history.push(update);
         this.notifyBots(update);
-        return callback_query;
+        return update;
     }
     postCbQueryAnswer(user, cbQuery) {
         const update = { callback_query: cbQuery };
         this.history.push(update);
-        return cbQuery;
+        return update;
     }
 }
 exports.Chat = Chat;

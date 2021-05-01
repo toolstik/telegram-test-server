@@ -11,7 +11,7 @@ export declare class Chat {
     leave(userId: number): void;
     checkAccess(userId: number): boolean;
     notifyBots(update: Update): void;
-    postMessage(author: User | Bot, message: Message): Message;
-    postCbQuery(user: User, message: Message, data: string): CallbackQuery;
-    postCbQueryAnswer(user: User | Bot, cbQuery: CallbackQuery): CallbackQuery;
+    postMessage(author: User | Bot, message: Message): Update.MessageUpdate;
+    postCbQuery(user: User, message: Message, data: string): Update.CallbackQueryUpdate;
+    postCbQueryAnswer(user: User | Bot, cbQuery: CallbackQuery): Update.CallbackQueryUpdate;
 }
