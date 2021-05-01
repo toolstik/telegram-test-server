@@ -9,7 +9,7 @@ export declare class Store {
     saveUser(user: User): User;
     saveBot(bot: Bot): Bot;
     saveChat(chat: Chat): Chat;
-    findBotByToken(token: string): any;
+    findBotByToken(token: string): Bot;
     findChat(chatId: number): Chat;
-    findChatByCbQuery(cbQueryId: number): Chat;
+    findChatByCbQuery(cbQueryId: string): Chat;
 }

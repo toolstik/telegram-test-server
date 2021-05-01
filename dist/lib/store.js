@@ -28,7 +28,7 @@ class Store {
         return this.chats.find(chat => chat.info.id === chatId);
     }
     findChatByCbQuery(cbQueryId) {
-        return this.chats.find(chat => chat.history.some(update => update.callback_query && update.callback_query.id === cbQueryId));
+        return this.chats.find(chat => chat.history.some(update => 'callback_query' in update && update.callback_query.id === cbQueryId));
     }
 }
 exports.Store = Store;

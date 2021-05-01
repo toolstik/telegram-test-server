@@ -1,21 +1,25 @@
 {
   "name": "telegram-test-server",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Telegram BotAPI server emulator",
   "license": "MIT",
-  "author": "Vitaly Domnikov <dotcypress@gmail.com>",
-  "homepage": "https://github.com/telegraf/telegram-test-server#readme",
+  "author": "Viktor Tolstik <tolstik.va@gmail.com>",
+  "contributors": [
+    "Vitaly Domnikov <dotcypress@gmail.com>"
+  ],
+  "homepage": "https://github.com/toolstik/telegram-test-server#readme",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/telegraf/telegram-test-server.git"
+    "url": "git+ssh://git@github.com/toolstik/telegram-test-server.git"
   },
   "bugs": {
-    "url": "https://github.com/telegraf/telegram-test-server/issues"
+    "url": "https://github.com/toolstik/telegram-test-server/issues"
   },
-  "main": "index.ts",
+  "main": "dist/lib/index.js",
   "scripts": {
     "lint": "eslint --quiet .",
     "test": "mocha -r ts-node/register",
+    "build": "tsc",
     "precommit": "yarn lint && yarn test"
   },
   "engines": {

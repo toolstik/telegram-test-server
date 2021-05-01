@@ -1,3 +1,5 @@
+/// <reference types="node" />
+import { Server } from 'http';
 import { Chat as TelegramChat } from 'typegram';
 import { Bot } from './models/bot';
 import { Chat } from './models/chat';
@@ -20,8 +22,8 @@ export declare class TelegramServer {
         chat: Chat;
     };
     findChat(chatId: number): Chat;
-    findChatByCbQuery(cbQueryId: any): Chat;
+    findChatByCbQuery(cbQueryId: string): Chat;
     getApiEndpoint(): string;
-    start(): void;
+    start(): Server;
     stop(): void;
 }

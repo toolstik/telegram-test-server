@@ -8,7 +8,7 @@
     "outDir": "dist",
     "sourceMap": true,
     "declaration": true,
-    "target": "es2017"
+    "target": "es2016"
   },
   "compileOnSave": true,
   "include": [

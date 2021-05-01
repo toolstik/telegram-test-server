@@ -19,24 +19,27 @@ class Chat {
         return (this.owner.info.id === userId || this.participants.some(({ info }) => info.id === userId));
     }
     notifyBots(update) {
-        this.participants.filter(({ info }) => info.is_bot).forEach(bot => bot.queueUpdate(update));
+        this.participants
+            .filter(({ info }) => info.is_bot)
+            .forEach((bot) => bot.queueUpdate(update));
     }
     postMessage(author, message) {
-        message = Object.assign({ message_id: this.history.filter(u => u.message).length + 1, chat: this.info, from: author.info, date: 0 }, message);
+        const msg = Object.assign({ message_id: this.history.filter(u => 'message' in u && u.message).length + 1, chat: this.info, from: author.info, date: 0 }, message);
         const update = {
-            message,
+            message: msg,
         };
         this.history.push(update);
         if (!author.info.is_bot) {
             this.notifyBots(update);
         }
-        return message;
+        return msg;
     }
     postCbQuery(user, message, data) {
         const callback_query = {
-            id: casual.integer(1000000),
+            id: String(casual.integer(1000000)),
             from: user.info,
             message: message,
+            chat_instance: undefined,
             data,
         };
         const update = {
@@ -47,11 +50,10 @@ class Chat {
         return callback_query;
     }
     postCbQueryAnswer(user, cbQuery) {
-        const update = { callback_query_answer: cbQuery };
+        const update = { callback_query: cbQuery };
         this.history.push(update);
         return cbQuery;
     }
 }
 exports.Chat = Chat;
-module.exports = Chat;
 //# sourceMappingURL=chat.js.map
