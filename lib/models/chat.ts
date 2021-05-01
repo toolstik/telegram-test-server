@@ -49,14 +49,14 @@ export class Chat {
 
     const update = {
       message: msg,
-    } as Update;
+    } as Update.MessageUpdate;
 
     this.history.push(update);
     if (!author.info.is_bot) {
       this.notifyBots(update);
     }
 
-    return msg;
+    return update;
   }
 
   postCbQuery(user: User, message: Message, data: string) {
@@ -70,16 +70,16 @@ export class Chat {
 
     const update = {
       callback_query,
-    } as Update;
+    } as Update.CallbackQueryUpdate;
 
     this.history.push(update);
     this.notifyBots(update);
-    return callback_query;
+    return update;
   }
 
   postCbQueryAnswer(user: User | Bot, cbQuery: CallbackQuery) {
-    const update = { callback_query: cbQuery } as Update;
+    const update = { callback_query: cbQuery } as Update.CallbackQueryUpdate;
     this.history.push(update);
-    return cbQuery;
+    return update;
   }
 }

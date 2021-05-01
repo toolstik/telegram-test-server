@@ -1,6 +1,6 @@
 {
   "name": "telegram-test-server",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Telegram BotAPI server emulator",
   "license": "MIT",
   "author": "Viktor Tolstik <tolstik.va@gmail.com>",
